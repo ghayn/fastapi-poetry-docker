@@ -1,0 +1,60 @@
+x-app: &app
+  build:
+    context: .docker/dev
+    args:
+      PG_MAJOR: '15'
+  image: fastapi-poetry-docker:0.0.0
+  env_file:
+    - .env.dev
+  tmpfs:
+    - /tmp
+
+x-server: &server
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - ./:/src:cached
+    - ./.docker/dev/psqlrc:/root/.psqlrc:ro
+    - ./.docker/dev/bashrc:/root/.bashrc
+    - history:/usr/local/hist
+    - poetry:/opt/poetry
+  environment:
+    XDG_DATA_HOME: /src/tmp/cache
+    HISTFILE: /usr/local/hist/.bash_history
+    PSQL_HISTFILE: /usr/local/hist/.psql_history
+
+services:
+    sh:
+      <<: *server
+      command: tail -f /dev/null
+
+    app:
+      <<: *server
+      command: poetry run dev
+      depends_on:
+        postgres:
+          condition: service_healthy
+      ports:
+        - 8000:${APP_SERVICE_PORT:-8000}
+
+    postgres:
+      image: postgres:14
+      volumes:
+        - ./.docker/dev/psqlrc:/root/.psqlrc:ro
+        - postgres:/var/lib/postgresql/data
+        - history:/user/local/hist
+      environment:
+        PSQL_HISTFILE: /user/local/hist/.psql_history
+        POSTGRES_USER: ${APP_DATABASE_USER:-postgres}
+        POSTGRES_PASSWORD: ${APP_DATABASE_PASSWORD:-postgres}
+      ports:
+        - 5432
+      healthcheck:
+        test: pg_isready -U postgres -h 127.0.0.1
+        interval: 5s
+
+volumes:
+  history:
+  postgres:
+  poetry:

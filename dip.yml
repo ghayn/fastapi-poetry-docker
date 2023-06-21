@@ -1,0 +1,42 @@
+version: '7.6'
+
+# Define default environment variables to pass
+# to Docker Compose
+# environment:
+
+compose:
+  files:
+    - docker-compose.dev.yml
+  project_name: fastapi-poetry
+
+interaction:
+  # This command spins up a container with the required dependencies (such as databases),
+  # and opens a terminal within it.
+  runner:
+    description: Open a Bash shell within a container (with dependencies up)
+    service: app
+    command: /bin/bash
+
+  # Run any dependent services (useful for scripts)
+  sh:
+    description: Run an arbitrary script within a container (or open a shell without deps)
+    service: sh
+    command:  /bin/bash
+    compose:
+      run_options: [no-deps]
+
+  dev:
+    service: app
+    command: poetry run dev
+    compose:
+      run_options: [service-ports, use-aliases]
+
+  poetry:
+    description: Run Poetry command
+    service: sh
+    command: poetry
+
+provision:
+  - dip compose down --volumes
+  - dip compose up -d postgres
+  - dip poetry install
