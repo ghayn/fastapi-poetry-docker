@@ -4,15 +4,28 @@ version = "0.1.0"
 description = ""
 authors = ["ghayn <ghayn@outlook.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
+packages = [{ include = "app" }]
 
 [tool.poetry.scripts]
 dev = "app.main:start"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 fastapi = "^0.95.2"
-uvicorn = {extras = ["standard"], version = "^0.22.0"}
+uvicorn = { extras = ["standard"], version = "^0.22.0" }
+
+[tool.poetry.group.dev.dependencies]
+httpx = "^0.24.1"
+
+[tool.poetry.group.test.dependencies]
+httpx = "^0.24.1"
+pytest = "^7.3.2"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+cache_dir="/src/tmp/cache/.pytest_cache"
+
 
 [build-system]
 requires = ["poetry-core"]

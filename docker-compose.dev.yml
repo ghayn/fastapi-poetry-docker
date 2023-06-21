@@ -19,6 +19,7 @@ x-server: &server
     - ./.docker/dev/bashrc:/root/.bashrc
     - history:/usr/local/hist
     - poetry:/opt/poetry
+    - app_cache:/src/tmp/cache
   environment:
     XDG_DATA_HOME: /src/tmp/cache
     HISTFILE: /usr/local/hist/.bash_history
@@ -58,3 +59,4 @@ volumes:
   history:
   postgres:
   poetry:
+  app_cache:

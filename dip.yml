@@ -1,4 +1,4 @@
-version: '7.6'
+version: "7.6"
 
 # Define default environment variables to pass
 # to Docker Compose
@@ -21,7 +21,7 @@ interaction:
   sh:
     description: Run an arbitrary script within a container (or open a shell without deps)
     service: sh
-    command:  /bin/bash
+    command: /bin/bash
     compose:
       run_options: [no-deps]
 
@@ -30,6 +30,10 @@ interaction:
     command: poetry run dev
     compose:
       run_options: [service-ports, use-aliases]
+
+  test:
+    service: app
+    command: poetry run pytest
 
   poetry:
     description: Run Poetry command
