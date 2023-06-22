@@ -59,6 +59,6 @@ RUN curl -sSL https://install.python-poetry.org | python -
 RUN mkdir -p /src
 WORKDIR /src
 
-ENTRYPOINT .docker/dev/docker-entrypoint.sh $0 $@
+ENTRYPOINT .docker/dev/setup-venv-entrypoint.sh $0 $@
 
 CMD ["/bin/bash"]
