@@ -7,7 +7,7 @@ version: "7.6"
 compose:
   files:
     - docker-compose.dev.yml
-  project_name: fastapi-poetry
+  project_name: fastapi-poetry-dev
 
 interaction:
   # This command spins up a container with the required dependencies (such as databases),

@@ -33,11 +33,7 @@ dip provision
 
 4. **Here we go**
 ``` bash
-# Skip this If you are not using vscode devcontainer feature.
-dip up sh -d
-
-# Running app server
-dip dev
+dip up -d
 ```
 
 5. Then open http://localhost:8000/ to see your app.
