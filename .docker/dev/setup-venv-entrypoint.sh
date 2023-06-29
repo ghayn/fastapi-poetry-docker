@@ -2,9 +2,11 @@
 
 set -e
 
-# activate our virtual environment here if .venv exists
-if [ -d "/src/.venv" ]; then
-    . /src/.venv/bin/activate
+env_path=$(poetry env info --path || true)
+
+if [[ -d "$env_path" && "$env_path" != "" ]]; then
+    echo "Activating virtual environment at $env_path"
+    source $env_path/bin/activate
 fi
 
 # Evaluating passed command:

@@ -20,7 +20,7 @@ interaction:
   # Run any dependent services (useful for scripts)
   sh:
     description: Run an arbitrary script within a container (or open a shell without deps)
-    service: sh
+    service: setup
     command: /bin/bash
     compose:
       run_options: [no-deps]
@@ -37,10 +37,9 @@ interaction:
 
   poetry:
     description: Run Poetry command
-    service: sh
+    service: app
     command: poetry
 
 provision:
   - dip compose down --volumes
-  - dip compose up -d postgres
-  - dip poetry install
+  - dip compose up -d postgres setup

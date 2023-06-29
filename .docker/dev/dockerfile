@@ -49,12 +49,14 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
     POETRY_HOME="/opt/poetry" \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=true
-
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+    POETRY_NO_INTERACTION=1
 
 RUN curl -sSL https://install.python-poetry.org | python -
+
+ENV POETRY_CACHE_DIR="$POETRY_HOME/cache" \
+    PATH="$POETRY_HOME/bin:$PATH"
+
+RUN mkdir -p "$POETRY_CACHE_DIR"
 
 RUN mkdir -p /src
 WORKDIR /src

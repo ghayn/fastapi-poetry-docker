@@ -8,6 +8,7 @@ x-app: &app
     - .env.dev
   tmpfs:
     - /tmp
+    - /src/tmp
 
 x-server: &server
   <<: *app
@@ -19,21 +20,22 @@ x-server: &server
     - ./.docker/dev/bashrc:/root/.bashrc
     - history:/usr/local/hist
     - poetry:/opt/poetry
-    - app_cache:/src/tmp/cache
   environment:
     XDG_DATA_HOME: /src/tmp/cache
     HISTFILE: /usr/local/hist/.bash_history
     PSQL_HISTFILE: /usr/local/hist/.psql_history
 
 services:
-    sh:
+    setup:
       <<: *server
-      command: tail -f /dev/null
+      command: poetry install
 
     app:
       <<: *server
       command: poetry run dev
       depends_on:
+        setup:
+          condition: service_completed_successfully
         postgres:
           condition: service_healthy
       ports:
@@ -59,4 +61,3 @@ volumes:
   history:
   postgres:
   poetry:
-  app_cache:
